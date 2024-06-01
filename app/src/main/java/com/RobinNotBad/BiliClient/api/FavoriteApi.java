@@ -2,11 +2,8 @@ package com.RobinNotBad.BiliClient.api;
 
 import android.util.Log;
 
-import com.RobinNotBad.BiliClient.BiliTerminal;
 import com.RobinNotBad.BiliClient.model.FavoriteFolder;
-import com.RobinNotBad.BiliClient.model.Opus;
 import com.RobinNotBad.BiliClient.model.VideoCard;
-import com.RobinNotBad.BiliClient.util.MsgUtil;
 import com.RobinNotBad.BiliClient.util.ToolsUtil;
 import com.RobinNotBad.BiliClient.util.NetWorkUtil;
 import com.RobinNotBad.BiliClient.util.SharedPreferencesUtil;
@@ -57,25 +54,7 @@ public class FavoriteApi {
         }
         return folderList;
     }
-    public static ArrayList<Opus> getFavouriteOpus(int page) throws IOException, JSONException {
-    	String url = "https://api.bilibili.com/x/polymer/web-dynamic/v1/opus/favlist?page_size=10&page="+page;
-        Response response = NetWorkUtil.get(url,ConfInfoApi.webHeaders);
-        JSONObject result = new JSONObject(Objects.requireNonNull(response.body()).string());
-        boolean hasMore = result.getJSONObject("data").getBoolean("has_more");
-        if(!hasMore) MsgUtil.toast("没有更多啦",BiliTerminal.context);
-        JSONArray items = result.getJSONObject("data").getJSONArray("items");
-        ArrayList<Opus> list = new ArrayList<>();
-        for(int i = 0; i < items.length(); i++) {
-            JSONObject item = items.getJSONObject(i);
-            Opus opus = new Opus();
-            opus.content = item.getString("content");
-            opus.cover = item.getString("cover");
-            opus.opusId = item.getString("opus_id");
-            opus.timeText = item.getString("time_text");
-            list.add(opus);
-        }
-        return list;
-    }
+
     public static int getFolderVideos(long mid, long fid, int page, ArrayList<VideoCard> videoList) throws IOException, JSONException {
         String url = "https://api.bilibili.com/x/space/fav/arc?vmid=" + mid
                 + "&ps=30&fid=" + fid + "&tid=0&keyword=&pn=" + page + "&order=fav_time";
